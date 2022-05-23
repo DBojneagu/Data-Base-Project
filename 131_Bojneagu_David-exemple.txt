@@ -1,0 +1,104 @@
+----------------------------------------EX1---------------------------------
+--Sa e afiseze toate competitiile ce sunt organizate de cei de la CLASH.si diferenta de luni dintre ele, dar in acelasi timp acelea care incep dupa data de 01-06-2000 
+select c.nume_comp, MONTHS_BETWEEN(c.data_sfarsit_comp, c.data_incep_comp)
+from competitie c, tara t, oras o, locatie l
+where c.id_competitie = t.id_competitie 
+and t.id_tara = o.id_tara
+and o.id_oras = l.id_oras 
+and upper(nume_comp) like '%CLASH%'
+and c.data_incep_comp > TO_DATE('01-06-2000','dd-mm-yyyy')
+and c.conditii_pct_comp = (select conditii_pct_comp
+                            from competitie
+                            where conditii_pct_comp = c.conditii_pct_comp)
+and c.taxa_participare = (select taxa_participare
+                            from competitie
+                            where taxa_participare = c.taxa_participare)
+and c.data_sfarsit_comp = (select data_sfarsit_comp
+                            from competitie
+                            where data_sfarsit_comp = c.data_sfarsit_comp)
+------------------------------------------EX2-------------------------------
+
+-- Sa se afiseze pentru fiecare antrenor care are mai mult de 0 ani experienta, nivelul acestuia de experienta, folosind case.
+select nume_ant,prenume_ant,gen_ant,experienta_ant,
+case
+    when experienta_ant>= 5 then 'Senior'
+    when experienta_ant>=4 then 'Experimentat'
+    else 'Junior'
+end as NIVEL_EXPERIENTA
+from antrenor
+where experienta_ant > 0
+order by nume_ant,prenume_ant,gen_ant,experienta_ant;
+
+----------------------------Ex3-------------------------------
+
+
+--Sa se afiseze numarul de fani de la competitia cu id-ul 31
+select nr_spectatori,nume_adresa
+from locatie
+where id_locatie in (select id_locatie
+                                         from oras
+                                         where id_oras in ( select id_oras
+                                                            from tara
+                                                            where id_competitie in (select id_competitie
+                                                                                    from competitie
+                                                                                    where id_competitie =31
+                                                                                   )
+                                                            )
+                                         )                  
+order by nr_spectatori,nume_adresa;
+
+
+-------------------------------Ex4----------------------
+
+
+
+--Sa se afiseze in ordine descrescatoare numele, prenumele , 
+--salariile antrenorilor si experienta antrenorilor ce au prenumele mai mare de 6 caractere,
+-- si diferenta minima intre anul de nastere al lor
+
+
+select nume_ant, prenume_ant,salariu_ant, NVL(gen_ant,'Nu are declarat genul')
+from antrenor
+where length(prenume_ant) >= 7
+order by DECODE('S','F',nume_ant,'L',prenume_ant,'S',salariu_ant,'G',NVL(gen_ant,'Nu are declarat genul'));
+
+
+---------------------------Ex5---------------------------
+
+-- Sa se afiseze numele cluburilor si valoarea totala a salariilor din cadrul acestora. 
+--Se vor considera cluburile a caror valoare totala a salariilor este mai mare decat media valorilor totale a salariilor tuturor antrenorilor
+with val_club AS (select nume_club,sum(salariu_ant) total
+                    from antrenor join club using (id_club)
+                    group by id_club,nume_club),
+    val_medie AS ( select avg(total) medie
+                    from val_club )
+select *
+from val_club
+where total > (select medie 
+            from val_medie)
+order by nume_club;
+
+-----------------ACtuALIZARI--------------
+-----------------------1-------------------------
+-- Sa se mareasca salariile antrenorilor clubului steaua cu 10%
+update antrenor
+SET salariu_ant = salariu_ant + 0.1*salariu_ant
+where id_club in (select id_club
+                  from club
+                  where nume_club like '%Steaua%');
+
+----------------------2-------------------------
+
+-- Sa se mareasca capacitatea de spectatori a locatiilor din Nice;
+update locatie
+set nr_spectatori = nr_spectatori + 100
+where id_oras in (select id_oras 
+                  from oras
+                  where nume_oras like '%Nice%'); 
+
+------------------Sa se mareasca salariul jucatorilor care sunt sponsorizati de o firma software--------------------
+update jucator
+set salariu_juc = salariu_juc + 0.2*salariu_juc
+where id_jucator in (select id_jucator
+                     from sponsor   
+                     where domeniu_sponsor like '%Software%');

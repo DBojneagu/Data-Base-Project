@@ -1,0 +1,541 @@
+-------------JUCATOR-----------------
+create table Jucator 
+(id_jucator number(5),
+nume_juc VARCHAR2(25) constraint nume_jucator not null,
+an_nastere_juc DATE constraint an_nastere_juc_nn not null, 
+prenume_juc VARCHAR2(25) constraint prenume_jucator not null,
+gen_juc CHAR(1) constraint gen_juc_nn not null,
+salariu_juc number(8,2) constraint salariu_nn not null,
+CONSTRAINT id_jucator_pk Primary Key (id_jucator)
+);
+
+insert into Jucator
+Values(10,'Bojneagu',TO_DATE('15-05-2002','dd-mm-yyyy'),'David','M',3000);
+
+insert into Jucator
+Values(11,'Nicolae',TO_DATE('13-09-2002','dd-mm-yyyy'),'Mihaela','F',4000);
+
+insert into Jucator
+Values(12,'Popescu',TO_DATE('14-10-2002','dd-mm-yyyy'),'Radu','M',2500);
+
+insert into Jucator
+Values(13,'Georgescu',TO_DATE('16-11-2002','dd-mm-yyyy'),'Andrei','M',2700);
+
+insert into Jucator
+Values(14,'Marinescu',TO_DATE('17-12-2002','dd-mm-yyyy'),'Andreea','F',3400);
+
+
+
+
+------------CLUB-------------------
+
+create table club
+(id_club number(5),
+ nume_club varchar2(25) constraint nume_club_nn not null,
+ nr_juc_club NUMBER(4) constraint nr_juc_club_nn not null,
+ an_ap_club number(4) constraint an_ap_club_nn not null,
+ constraint  id_club_nn primary key(id_club)
+ );
+
+ 
+ insert into club
+ values(20,'Dinamo',230,1967);
+ 
+  insert into club
+ values(21,'Steaua',100,1975);
+ 
+  insert into club
+ values(22,'Buzau',120,1950);
+ 
+  insert into club
+ values(23,'Bistrita',160,1932);
+ 
+  insert into club
+ values(24,'Caracal',300,1943);
+
+-------------ANTRENOR----------------------
+create table antrenor
+(id_antrenor Number(5),
+nume_ant VARCHAR2(20) constraint nume_ant_nn not null,
+prenume_ant VARCHAR2(20) constraint prenume_ant_nn not null, 
+anul_nastere_ant DATE CONSTRAINT an_nastere_ant NOT NULL,
+gen_ant CHAR(1) constraint gen_ant_nn not null,
+experienta_ant number(2),
+salariu_ant NUMBER(6,2) constraint salariu_ant_nn not null,
+id_club NUMBER(5),
+CONSTRAINT gen_antnn check ( gen_ant = 'M' OR gen_ant = 'F')
+);
+
+alter table antrenor
+add constraint id_antrenor_pk primary key(id_antrenor);
+alter table antrenor
+add constraint id_club_pkpk FOREIGN KEY (id_club) REFERENCES club(id_club);
+
+
+insert into antrenor
+values (40,'Andrei','Ciobanu',TO_DATE('20-10-1990','dd-mm-yyyy'),'M',4,2500,21);
+
+insert into antrenor
+values (41,'Andreea','Nicula',TO_DATE('26-10-1990','dd-mm-yyyy'),'F',5,5500,22);
+
+insert into antrenor
+values (42,'Luca','Andreescu',TO_DATE('20-07-1990','dd-mm-yyyy'),'M',2,2200,21);
+
+insert into antrenor
+values (43,'Matei','Popovici',TO_DATE('26-05-1990','dd-mm-yyyy'),'M',4,3300,24);
+
+insert into antrenor
+values (44,'Miruna','Gherman',TO_DATE('24-07-1990','dd-mm-yyyy'),'F',4,2620,22);
+
+--------------Competitie-----------------------
+create table competitie
+(id_competitie number(5),
+ nume_comp VARCHAR(20) constraint  nume_comp_nn not null,
+ data_incep_comp DATE CONSTRAINT data_incep_comp_nn not null,
+ data_sfarsit_comp DATE CONSTRAINT data_sfarsit_comp_nn not null,
+ conditii_pct_comp NUMBER(4) constraint conditii_part_comp_NN not null,
+ taxa_participare Number(4) constraint taxa_participare_nn not null,
+ constraint id_competitie_pk primary key(id_competitie)
+ );
+
+ insert into competitie
+values(30,'Clash',TO_DATE('15-05-2002','dd-mm-yyyy'),TO_DATE('16-05-2002','dd-mm-yyyy'),300,500);
+ 
+  insert into competitie
+values(31,'Quick',TO_DATE('12-05-2022','dd-mm-yyyy'),TO_DATE('14-05-2022','dd-mm-yyyy'),200,600);
+
+ insert into competitie
+values(32,'NowOrNever',TO_DATE('11-06-2021','dd-mm-yyyy'),TO_DATE('13-06-2021','dd-mm-yyyy'),600,1000);
+
+ insert into competitie
+values(33,'ASAP',TO_DATE('19-07-2022','dd-mm-yyyy'),TO_DATE('21-07-2022','dd-mm-yyyy'),150,400);
+
+ insert into competitie
+values(34,'Tactic',TO_DATE('20-10-2021','dd-mm-yyyy'),TO_DATE('22-10-2021','dd-mm-yyyy'),900,800);
+
+
+
+
+-------------Premiu-----------------------
+create table premiu
+(id_premiu number(5),
+suma_premiu number(8,2) constraint suma_premiu_NN not null,
+puncte_premiu number(4)  constraint puncte_premiu_nn not null,
+id_competitie number(5),
+constraint id_premiu_pk PRIMARY KEY (id_premiu)
+);
+
+alter table premiu
+add constraint id_comp_pkpk FOREIGN KEY(id_competitie) references competitie(id_competitie);
+
+insert into premiu
+values(20,3000,100,30);
+
+insert into premiu
+values(21,4000,500,31);
+
+insert into premiu
+values(22,5000,400,31);
+
+insert into premiu
+values(23,6000,330,33);
+
+insert into premiu
+values(24,7000,250,30);
+
+-------------Clasament-----------------------
+create table clasament
+(id_clasament number(5),
+pozitie_clasament number(5) constraint pozitie_clasament_NN not null,
+id_jucator number(5),
+constraint id_clasament_pk PRIMARY KEY (id_clasament)
+);
+
+alter table clasament
+add constraint id_jucator_pkpk FOREIGN KEY(id_jucator) references jucator(id_jucator);
+
+insert into clasament
+values(50,23,10);
+
+insert into clasament
+values(51,13,11);
+
+insert into clasament
+values(52,3,12);
+
+insert into clasament
+values(53,2,13);
+
+insert into clasament
+values(54,10,14);
+
+
+
+--------------Fani----------------------
+create table fani
+(id_fani number(5),
+numar_fani number(6) constraint numar_fani_NN not null,
+id_jucator number(5),
+constraint id_fani_pk PRIMARY KEY (id_fani)
+);
+
+alter table fani
+add constraint id_jucator_pkpkpk FOREIGN KEY(id_jucator) references jucator(id_jucator);
+
+create sequence seq_fani
+increment by 10
+start with 150
+maxvalue 10000
+nocycle;
+
+insert into fani
+values(seq_fani.nextval,1000,10);
+
+insert into fani
+values(seq_fani.nextval,10000,11);
+
+insert into fani
+values(seq_fani.nextval,20000,12);
+
+insert into fani
+values(seq_fani.nextval,30000,13);
+
+insert into fani
+values(seq_fani.nextval,40000,14);
+
+
+
+----------------Sponsori--------------------------
+create table sponsor
+(id_sponsor number(5),
+ nume_sponsor varchar2(25) constraint nume_sponsor_nn not null,
+ suma_sponsor NUMBER(4) constraint suma_sponsor_nn not null,
+ domeniu_sponsor VARCHAR(20) constraint domeniu_sponsor_nn not null,
+ id_jucator number(5),
+ constraint  id_sponsor_nn primary key(id_sponsor)
+ );
+ 
+ alter table sponsor
+ add constraint id_jucator_pkpkpkpk FOREIGN KEY(id_jucator) references jucator(id_jucator);
+
+
+insert into sponsor
+values(80,'Lidl',2000,'Alimentar',10);
+
+insert into sponsor
+values(81,'Sony',2000,'Audio',11);
+
+insert into sponsor
+values(82,'Redbull',2000,'Alimentar',12);
+
+insert into sponsor
+values(83,'Apple',2000,'Software',13);
+
+insert into sponsor
+values(84,'Meta',2000,'Software',14);
+
+------------Istoric_jucator----------------------
+
+create table istoric_jucator
+(id_istoric_jucator number(5),
+ experienta_joc number(4) constraint experienta_joc_nn not null,
+ victorii_totale_juc NUMBER(4) constraint victorii_totale_nn not null,
+ id_jucator number(5),
+ constraint  id_istoric_jucator_nn primary key(id_istoric_jucator)
+ );
+ 
+ alter table istoric_jucator
+ add constraint id_jucator_pk2 FOREIGN KEY(id_jucator) references jucator(id_jucator);
+
+
+insert into istoric_jucator
+values(90,4,56,10);
+
+insert into istoric_jucator
+values(91,5,60,11);
+
+insert into istoric_jucator
+values(92,7,70,12);
+
+insert into istoric_jucator
+values(93,12,80,13);
+
+insert into istoric_jucator
+values(94,3,90,14);
+
+----------------------Tara----------------------------
+
+create table tara
+(id_tara number(5),
+ nume_tara varchar(25) constraint nume_tara_nn not null,
+ id_competitie number(5),
+ constraint  id_tara_nn primary key(id_tara)
+ );
+ 
+ alter table tara
+ add constraint id_competitie_pk3 FOREIGN KEY(id_competitie) references competitie(id_competitie);
+
+
+
+insert into tara
+values(20,'Bulgaria',30);
+
+insert into tara
+values(21,'Romania',31);
+
+insert into tara
+values(22,'Austria',32);
+
+insert into tara
+values(23,'Germania',33);
+
+insert into tara
+values(24,'Franta',34);
+
+-----------------------Oras--------------------------
+
+
+
+create table oras
+(id_oras number(5),
+ nume_oras varchar(25) constraint nume_oras_nn not null,
+ id_tara number(5),
+ constraint  id_oras_nn primary key(id_oras)
+ );
+ 
+ alter table oras
+ add constraint id_tara_pk4 FOREIGN KEY(id_tara) references tara(id_tara);
+
+
+
+insert into oras
+values(100,'Bansko',20);
+
+insert into oras
+values(101,'Timisoara',21);
+
+insert into oras
+values(102,'Vienna',22);
+
+insert into oras
+values(103,'Berlin',23);
+
+insert into oras
+values(104,'Nice',24);
+
+
+---------------------Locatie-------------------------
+
+create table locatie
+(id_locatie number(5),
+ nume_adresa varchar(25) constraint nume_adresa_nn not null,
+ numar_adresa number(5) constraint numar_adresa_nn not null,
+ nr_spectatori number(5) constraint nr_spectatori_nn not null,
+ id_oras number(5),
+ constraint  id_locatie_nn primary key(id_locatie)
+ );
+ 
+ alter table locatie
+ add constraint id_oras_pk4 FOREIGN KEY(id_oras) references oras(id_oras);
+
+
+insert into locatie
+values(110,'Grand Arena',3,10000,100);
+
+insert into locatie
+values(111,'Bernabeu',25,20000,101);
+
+insert into locatie
+values(112,'Camp nou',45,15000,102);
+
+insert into locatie
+values(113,'Alianz',12,12220,103);
+
+insert into locatie
+values(114,'Parkone',16,30000,104);
+
+
+
+--------------------Antrenament---------------------------------
+create table antrenament
+(id_antrenament number(5),
+ nume_antrenament varchar(25) constraint nume_antrenament_nn not null,
+ durata_antrenament number(2) constraint durata_antrenament_nn not null,
+ id_antrenor number(5),
+ id_jucator number(5),
+ constraint  id_antrenament_nn primary key(id_antrenament)
+ );
+ 
+ alter table antrenament
+ add constraint id_jucator_pk6 FOREIGN KEY(id_jucator) references jucator(id_jucator);
+ alter table antrenament
+ add constraint id_antrenor_pk7 FOREIGN KEY(id_antrenor) references antrenor(id_antrenor);
+
+
+
+insert into antrenament
+values(120,'Biceps',4,40,10);
+
+insert into antrenament
+values(121,'Core',5,41,11);
+
+insert into antrenament
+values(122,'Triceps',1,42,12);
+
+insert into antrenament
+values(123,'Picioare',3,43,13);
+
+insert into antrenament
+values(124,'Cardio',4,44,14);
+
+
+-----------Sponsorizeaza---------------------
+
+create table sponsorizeaza
+(id_sponsorizeaza number(5),
+ durata_contract_ani number(2) constraint durata_contract_ani_nn not null,
+ id_sponsor number(5),
+ id_jucator number(5),
+ constraint  id_sponsorizeaza_nn primary key(id_sponsorizeaza)
+ );
+ 
+ alter table sponsorizeaza
+ add constraint id_jucator_pk8 FOREIGN KEY(id_jucator) references jucator(id_jucator);
+ alter table sponsorizeaza
+ add constraint id_sponsor_pk8 FOREIGN KEY(id_sponsor) references sponsor(id_sponsor);
+ 
+
+ 
+ insert into sponsorizeaza
+ values (130,4,80,10);
+ 
+  insert into sponsorizeaza
+ values (131,5,81,11);
+ 
+  insert into sponsorizeaza
+ values (132,3,82,12);
+ 
+  insert into sponsorizeaza
+ values (133,2,83,13);
+ 
+  insert into sponsorizeaza
+ values (134,1,84,14);
+ 
+  insert into sponsorizeaza
+ values (135,8,80,14);
+ 
+  insert into sponsorizeaza
+ values (136,6,81,13);
+
+  insert into sponsorizeaza
+ values (137,7,82,12);
+ 
+  insert into sponsorizeaza
+ values (138,3,83,11);
+ 
+  insert into sponsorizeaza
+ values (139,5,84,10);
+
+-----------Rutina----------------------------
+
+create table rutina
+(id_rutina number(5),
+ frecv_saptamanala number(2) constraint frecv_saptamanala_nn not null,
+ id_antrenor number(5),
+ id_jucator number(5),
+ id_antrenament number(5),
+ constraint  id_rutina_nn primary key(id_rutina)
+ );
+ 
+ alter table  rutina
+ add constraint id_jucator_pk9 FOREIGN KEY(id_jucator) references jucator(id_jucator);
+ alter table  rutina
+ add constraint id_antrenor_pk9 FOREIGN KEY(id_antrenor) references antrenor(id_antrenor);
+ alter table  rutina
+ add constraint id_antrenament_pk9 FOREIGN KEY(id_antrenament) references antrenament(id_antrenament);
+
+ 
+ insert into rutina
+ values(150,3,41,10,120);
+ 
+ insert into rutina
+ values(151,4,42,11,121);
+ 
+ 
+ insert into rutina
+ values(152,5,43,12,122);
+ 
+ 
+ insert into rutina
+ values(153,6,44,13,123);
+ 
+ 
+ insert into rutina
+ values(154,7,44,14,124);
+ 
+ 
+ insert into rutina
+ values(155,8,43,14,124);
+ 
+ 
+ insert into rutina
+ values(156,9,42,13,123);
+ 
+ 
+ insert into rutina
+ values(157,1,41,12,122);
+ 
+ 
+ insert into rutina
+ values(158,2,42,11,121);
+ 
+ 
+ insert into rutina
+ values(159,4,43,10,120);
+
+----------Participa--------------------------
+
+create table participa
+(id_participa number(5),
+ punctaj_comp number(2) constraint punctaj_comp_nn not null,
+ id_jucator number(5),
+ id_competitie number(5),
+ constraint  id_participa_nn primary key(id_participa)
+ );
+ 
+ alter table  participa
+ add constraint id_jucator_pk10 FOREIGN KEY(id_jucator) references jucator(id_jucator);
+ alter table  participa
+ add constraint id_competitie_pk9 FOREIGN KEY(id_competitie) references competitie(id_competitie);
+
+ 
+ 
+ insert into participa
+ values(160,30,10,30);
+ 
+  insert into participa
+ values(161,40,11,31);
+ 
+  insert into participa
+ values(162,50,12,32);
+ 
+  insert into participa
+ values(163,60,13,33);
+ 
+  insert into participa
+ values(164,20,14,34);
+ 
+  insert into participa
+ values(165,10,14,34);
+ 
+  insert into participa
+ values(166,40,13,33);
+ 
+  insert into participa
+ values(167,60,12,32);
+ 
+  insert into participa
+ values(168,70,11,31);
+ 
+  insert into participa
+ values(169,80,10,30);
