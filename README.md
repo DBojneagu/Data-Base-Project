@@ -1,0 +1,2 @@
+# Data-Base-Project
+ This was my project for the data-base course, we needed to implement an database with a theme of choice(my choice was a sport tournament), with atleast 12 entities, normalize it, and implement 5 complex tasks(using join on 4 tables, 3 syncronised subrequest, and 3 unsyncronized, string and date functions, NVL and DECODE functions, as well as WITH and CASE. As the final task we needed to implement 3 updates on our database. 
